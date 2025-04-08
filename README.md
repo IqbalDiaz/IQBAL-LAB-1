@@ -93,7 +93,7 @@ sudo tcpdump -i eth0 port 21 or port 23 or port 22 or port 80 -w capture.pcap
 ```
 Analyze `capture.pcap` in Wireshark.
 
-*Provide screenshot of captured plaintext credentials.*
+![alt text](image-17.png)
 
 ## 5. Problems Encountered
 - **Rate Limiting / Account Lockouts:** Some services limit failed attempts.
