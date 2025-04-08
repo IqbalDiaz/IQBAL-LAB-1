@@ -113,3 +113,4 @@ Analyze `capture.pcap` in Wireshark.
 - Brute force attacks were successfully performed against FTP, TELNET, SSH, and HTTP.
 - Unencrypted credentials were captured from FTP and TELNET.
 - Mitigation strategies, such as enforcing encryption and key-based authentication, improve security.
+
