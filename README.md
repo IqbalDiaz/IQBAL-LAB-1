@@ -5,8 +5,8 @@
 The goal of this lab is to explore vulnerabilities in common network protocols (FTP, TELNET, SSH, HTTP) by performing brute force attacks, sniffing network traffic, and analyzing security weaknesses. Additionally, mitigation strategies will be proposed to improve security.
 
 ### Environment
-- **Kali Linux** (Attacker Machine)
-- **Metasploitable 2** (Target VM)
+- **Kali Linux** (Attacker Machine) ![alt text](image-1.png)
+- **Metasploitable 2** (Target VM) ![alt text](image.png)
 - **Tools Used:**
   - Hydra, Medusa, NetExec (Brute Force Attacks)
   - Burp Suite (HTTP Login Brute Force)
@@ -21,15 +21,28 @@ nmap -p 21,23,22,80 --script=ftp-anon,telnet-encryption,ssh-hostkey <TARGET_IP>
 ```
 *Expected Output: A list of open ports and running services*
 
+![alt text](image-2.png)
+
 ### Enumerating Usernames
 For FTP, TELNET, and SSH:
 ```bash
 enum4linux -a <TARGET_IP>
 ```
+![alt text](image-3.png)
+![alt text](image-4.png)
+![alt text](image-5.png)
+![alt text](image-6.png)
+![alt text](image-7.png)
+![alt text](image-8.png)
+![alt text](image-9.png)
+![alt text](image-10.png)
+![alt text](image-11.png)
+
 For HTTP:
 ```bash
 gobuster dir -u http://<TARGET_IP> -w /usr/share/wordlists/dirb/common.txt
 ```
+![alt text](image-12.png)
 *Document any discovered usernames.*
 
 ## 3. Brute Force Attacks
@@ -37,19 +50,19 @@ gobuster dir -u http://<TARGET_IP> -w /usr/share/wordlists/dirb/common.txt
 ```bash
 hydra -L userlist.txt -P passlist.txt <TARGET_IP> ftp -V
 ```
-*Successful login screenshot here.*
+![alt text](image-13.png)
 
-### 3.2 TELNET Brute Force Attack (Medusa)
+### 3.2 TELNET Brute Force Attack (Hydra)
 ```bash
-medusa -h <TARGET_IP> -U userlist.txt -P passlist.txt -M telnet
+hydra -L userlist.txt -P passlist.txt <TARGET_IP> telnet -V
 ```
-*Successful login screenshot here.*
+![alt text](image-14.png)
 
 ### 3.3 SSH Brute Force Attack (NetExec)
 ```bash
-nxc <TARGET_IP> -u userlist.txt -p passlist.txt -m ssh
+nxc ssh <TARGET_IP> -u userlist.txt -p passlist.txt
 ```
-*Successful login screenshot here.*
+![alt text](image-15.png)
 
 ### 3.4 HTTP Login Brute Force Attack (Burp Suite)
 1. Capture login request using Burp Suite Proxy.
@@ -57,7 +70,8 @@ nxc <TARGET_IP> -u userlist.txt -p passlist.txt -m ssh
 3. Load username and password lists.
 4. Start attack and analyze responses for successful logins.
 
-*Provide screenshot of a successful login attempt.*
+![alt text](image-16.png)
+
 
 ## 4. Sniffing Network Traffic
 ### Capturing Packets using Wireshark
