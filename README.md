@@ -6,7 +6,7 @@ The goal of this lab is to explore vulnerabilities in common network protocols (
 
 ### Environment
 - **Kali Linux** (Attacker Machine) ![alt text](image-1.png)
-- **Metasploitable 2** (Target VM) ![alt text](image.png)
+- **Metasploitable 2** (Target VM) ![alt text](image-0.png)
 - **Tools Used:**
   - Hydra, Medusa, NetExec (Brute Force Attacks)
   - Burp Suite (HTTP Login Brute Force)
