@@ -127,20 +127,33 @@ nxc ssh <TARGET_IP> -u userlist.txt -p passlist.txt
 
 ![alt text](image-18.png)
 
-If you want to use Hydra instead:
-```bash
-hydra -L userlist.txt -P passlist.txt ssh://<TARGET_IP>
-```
-- `-L`: Path to username list
-- `-P`: Path to password list
-- `ssh://<TARGET_IP>`: Target SSH service
-
 🧠 SSH often has brute force protection — space out requests or use a proxy if needed.
 
 ### 🔹3.4 HTTP Login Brute Force Attack (Burp Suite)
-1. Start **Burp Suite** → Set your browser to use Burp as a proxy.
-2. Try to log in to the HTTP page → Capture the request in **Proxy** tab.
-3. Right-click → **Send to Intruder**
+1. Launch Burp’s Browser:
+    - Go to **Proxy > Intercept** tab.
+    - Make sure the **Intercept is ON**.
+    - Click **"Open Browser"** — this opens Burp's built-in browser (already configured to route traffic through Burp).
+    - Arrange your windows so you can see both Burp and the browser.
+2. Intercept a Request
+    - In Burp's browser, **navigate to the target login page** (e.g., `http://<target-ip>/login`).
+    - Try to **submit the login form** (enter any dummy credentials).
+    - Burp will **intercept** the HTTP request.
+    - You’ll see the full request in **Proxy > Intercept** tab.
+3. Forward the Request
+    - Click **"Forward"** to allow the request to continue to the server.
+    - If multiple requests are intercepted, keep clicking Forward until the page loads.
+    - This is useful if you want to watch exactly how the form is submitted.
+4. Turn Off Intercept
+    - Go back to the **Proxy > Intercept** tab.
+    - Toggle **"Intercept is OFF"** to let future requests pass through automatically.
+    - This prevents Burp from pausing the browser every time a request is made.
+5. View HTTP History
+    - Go to **Proxy > HTTP history**.
+    - Scroll to find the **POST request to the login page**.
+    - Click it to view the **raw request and response**.
+    - Right-click the request → **Send to Intruder**.
+
 4. In **Intruder** tab:
    - Set attack type to **Cluster Bomb**
    - Mark **username** and **password** fields as payload positions
@@ -152,7 +165,7 @@ hydra -L userlist.txt -P passlist.txt ssh://<TARGET_IP>
    - Different length in response
    - Success indicators (e.g., “Welcome” or redirect)
 
-*Provide screenshot of a successful login attempt.*
+
 
 ### ⚠️ Common Issues & Fixes
 
