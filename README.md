@@ -90,8 +90,8 @@ Before launching brute force attacks, make sure you have:
 
 Or create your own minimal test list:
 ```bash
-echo -e "admin\nuser\ntest\msfadmin" > userlist.txt
-echo -e "1234\nadmin\npassword\msfadmin" > passlist.txt
+echo -e "admin\nmsfadmin\nanonymous\nuser\ntest" > userlist.txt
+echo -e "1234\nmsfadmin\ftp123\nadmin\npassword" > passlist.txt
 ```
 
 ### 🔹3.1 FTP Brute Force Attack (Hydra)
@@ -125,6 +125,7 @@ nxc ssh <TARGET_IP> -u userlist.txt -p passlist.txt
 - `-p`: Path to password list
 - `-m ssh`: Specifies SSH as the target service
 
+![alt text](image-18.png)
 
 If you want to use Hydra instead:
 ```bash
