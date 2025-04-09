@@ -19,7 +19,7 @@ First, identify open ports and services running on the target VM:
 ```bash
 nmap -p 21,23,22,80 --script=ftp-anon,telnet-encryption,ssh-hostkey <TARGET_IP>
 ```
-*Expected Output: A list of open ports and running services*
+![alt text](image.png)
 
 ### Enumerating Usernames
 For FTP, TELNET, and SSH:
