@@ -13,19 +13,54 @@ The goal of this lab is to explore vulnerabilities in common network protocols (
   - Wireshark, tcpdump (Traffic Sniffing)
   - Nmap, Enum4Linux (Enumeration)
 
-## 2. Enumeration
-### Scanning the Target Machine
+## 🔍 2. Enumeration
+### 🎯 Scanning the Target Machine
 First, identify open ports and services running on the target VM:
 ```bash
-nmap -p 21,23,22,80 --script=ftp-anon,telnet-encryption,ssh-hostkey <TARGET_IP>
+nmap -sC -sV -p 21,22,23,80 <TARGET_IP>
 ```
+
+**Explanation:**
+- `-sC`: Runs default NSE scripts
+- `-sV`: Service version detection
+- `-p`: Scans only specified ports (FTP, SSH, Telnet, HTTP)
+
 ![alt text](image.png)
 
+**Alternative (with specific scripts):**
+```bash
+nmap -p 21,22,23,80 --script=ftp-anon,telnet-encryption,ssh-hostkey,http-title <TARGET_IP>
+```
+
+🔧 **Expected Output:**  
+A list of open ports, service banners, and basic vulnerability info (e.g., anonymous FTP access, SSH keys, Telnet security, web titles)
+
+![alt text](image-1.png)
+
 ### Enumerating Usernames
-For FTP, TELNET, and SSH:
+🧱 From SMB (to use with SSH, Telnet, FTP later):
 ```bash
 enum4linux -a <TARGET_IP>
 ```
+**What it does:**  
+Enumerates users, shares, groups, and policies over SMB. Useful for finding valid system usernames that might also exist in SSH/Telnet/FTP.
+
+> 💡 Look for usernames like `msfadmin`, `user`, `postgres`, etc. in the output.
+
+![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-4.png)
+![alt text](image-5.png)
+![alt text](image-6.png)
+![alt text](image-7.png)
+![alt text](image-8.png)
+![alt text](image-9.png)
+![alt text](image-10.png)
+![alt text](image-11.png)
+![alt text](image-12.png)
+![alt text](image-13.png)
+![alt text](image-14.png)
+
 For HTTP:
 ```bash
 gobuster dir -u http://<TARGET_IP> -w /usr/share/wordlists/dirb/common.txt
