@@ -165,7 +165,11 @@ nxc ssh <TARGET_IP> -u userlist.txt -p passlist.txt
    - Different length in response
    - Success indicators (e.g., “Welcome” or redirect)
 
-
+![alt text](image-19.png)
+![alt text](image-20.png)
+![alt text](image-21.png)
+![alt text](image-22.png)
+![alt text](image-23.png)
 
 ### ⚠️ Common Issues & Fixes
 
