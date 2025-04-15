@@ -170,6 +170,8 @@ nxc ssh <TARGET_IP> -u userlist.txt -p passlist.txt
 ![alt text](image-21.png)
 ![alt text](image-22.png)
 ![alt text](image-23.png)
+![alt text](image-34.png)
+![alt text](image-35.png)
 
 ### ⚠️ Common Issues & Fixes
 
@@ -181,14 +183,10 @@ nxc ssh <TARGET_IP> -u userlist.txt -p passlist.txt
 
 ## 🧪 **4. Sniffing Network Traffic**
 
----
-
 ### ✅ **Objective**
 Capture and analyze network traffic while logging into FTP, TELNET, SSH, and HTTP services to determine:
 - Which protocols **leak credentials in plaintext**
 - Which protocols **encrypt** the communication
-
----
 
 ### 🔹 **4.1 Setup Wireshark**
 1. Open Wireshark:
@@ -201,12 +199,8 @@ sudo wireshark
 
 3. Start the capture **before logging into any services**.
 
----
-
 ### 🔹 **4.2 Login with Recovered Credentials**
 For each service, use the correct username/password found earlier.
-
----
 
 #### 🟡 FTP Login
 ```bash
@@ -224,7 +218,10 @@ tcp.port == 21
 - USER and PASS commands
 - Plaintext username and password in packet contents
 
----
+![alt text](image-24.png)
+![alt text](image-25.png)
+![alt text](image-26.png)
+![alt text](image-27.png)
 
 #### 🟡 TELNET Login
 ```bash
@@ -241,7 +238,10 @@ tcp.port == 23
 - Keystrokes being transmitted as plaintext
 - Session interaction visible in packets
 
----
+![alt text](image-28.png)
+![alt text](image-29.png)
+![alt text](image-30.png)
+![alt text](image-32.png)
 
 #### 🟢 SSH Login
 ```bash
@@ -257,33 +257,17 @@ tcp.port == 22
 - TCP handshake
 - Encrypted payloads
 
----
-
-#### 🟡 HTTP Login (if there’s a form)
-1. Open browser → go to `http://<TARGET_IP>/login`
-2. Log in with the known credentials
-
-🎯 Wireshark filter:
-```
-http
-```
-
-🧠 Look for:
-- POST request to `/login`
-- Username and password inside the payload
-
-🧠 Tip: Right-click → Follow → HTTP Stream to see the full request.
+![alt text](image-33.png)
 
 ---
 
 ### 🛡️ **Result Summary Table**
 
-| Protocol | Encryption | Are credentials visible? | Evidence |
-|----------|------------|---------------------------|----------|
-| FTP      | ❌ No      | ✅ Yes                    | Screenshot: `USER` & `PASS` packet |
-| TELNET   | ❌ No      | ✅ Yes                    | Screenshot: visible keystrokes |
-| SSH      | ✅ Yes     | ❌ No                     | Screenshot: encrypted payload |
-| HTTP     | ❌ No (if no HTTPS) | ✅ Yes        | Screenshot: POST with creds |
+| Protocol | Encryption | Are credentials visible? |
+|----------|------------|---------------------------|
+| FTP      | ❌ No      | ✅ Yes                    |
+| TELNET   | ❌ No      | ✅ Yes                    | 
+| SSH      | ✅ Yes     | ❌ No                     | 
 
 
 ## 5. Problems Encountered
