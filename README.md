@@ -245,19 +245,24 @@ tcp.port == 23
 
 #### 🟢 SSH Login
 ```bash
-ssh <username>@<TARGET_IP>
+ssh -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=+ssh-rsa <username>@<TARGET_IP>
 ```
 
-🎯 Wireshark filter:
+- Use the credentials recovered from your brute force attack.
+- These options force compatibility with older key exchange algorithms (`ssh-rsa`), which is useful if you're working with legacy systems or Metasploitable VMs.
+
+🎯 **Wireshark filter**:
 ```
 tcp.port == 22
 ```
 
-🧠 You **won’t** see credentials here. All data (including login) is encrypted. The only thing visible is:
-- TCP handshake
-- Encrypted payloads
+🧠 **What to expect**:
+- You will **not** see the username or password in plaintext.
+- All communication is encrypted (you’ll only see encrypted packets and session initiation).
 
 ![alt text](image-33.png)
+![alt text](image-36.png)
+![alt text](image-37.png)
 
 ---
 
