@@ -179,27 +179,112 @@ nxc ssh <TARGET_IP> -u userlist.txt -p passlist.txt
 | CAPTCHA or login form protections | HTTP brute force fails | May need manual testing or bypass techniques |
 | SSH protection (fail2ban) | IP gets banned | Rotate IPs (proxychains or VPN) |
 
-## 4. Sniffing Network Traffic
-### Capturing Packets using Wireshark
+## 🧪 **4. Sniffing Network Traffic**
+
+---
+
+### ✅ **Objective**
+Capture and analyze network traffic while logging into FTP, TELNET, SSH, and HTTP services to determine:
+- Which protocols **leak credentials in plaintext**
+- Which protocols **encrypt** the communication
+
+---
+
+### 🔹 **4.1 Setup Wireshark**
 1. Open Wireshark:
 ```bash
 sudo wireshark
 ```
-2. Start capture on the network interface connected to the target.
-3. Apply filters:
-   - FTP: `tcp.port == 21`
-   - TELNET: `tcp.port == 23`
-   - SSH: `tcp.port == 22`
-   - HTTP: `tcp.port == 80`
-4. Identify unencrypted traffic containing credentials.
 
-### Capturing Packets using tcpdump
+2. Select the correct interface:
+   - Usually `eth0`, `ens33`, or `wlan0` (depending on your setup)
+
+3. Start the capture **before logging into any services**.
+
+---
+
+### 🔹 **4.2 Login with Recovered Credentials**
+For each service, use the correct username/password found earlier.
+
+---
+
+#### 🟡 FTP Login
 ```bash
-sudo tcpdump -i eth0 port 21 or port 23 or port 22 or port 80 -w capture.pcap
+ftp <TARGET_IP>
 ```
-Analyze `capture.pcap` in Wireshark.
+- Use recovered credentials
+- Run a basic command (e.g., `ls`)
 
-*Provide screenshot of captured plaintext credentials.*
+🎯 Wireshark filter:
+```
+tcp.port == 21
+```
+
+🧠 Look for:
+- USER and PASS commands
+- Plaintext username and password in packet contents
+
+---
+
+#### 🟡 TELNET Login
+```bash
+telnet <TARGET_IP>
+```
+- Enter username and password manually
+
+🎯 Wireshark filter:
+```
+tcp.port == 23
+```
+
+🧠 Look for:
+- Keystrokes being transmitted as plaintext
+- Session interaction visible in packets
+
+---
+
+#### 🟢 SSH Login
+```bash
+ssh <username>@<TARGET_IP>
+```
+
+🎯 Wireshark filter:
+```
+tcp.port == 22
+```
+
+🧠 You **won’t** see credentials here. All data (including login) is encrypted. The only thing visible is:
+- TCP handshake
+- Encrypted payloads
+
+---
+
+#### 🟡 HTTP Login (if there’s a form)
+1. Open browser → go to `http://<TARGET_IP>/login`
+2. Log in with the known credentials
+
+🎯 Wireshark filter:
+```
+http
+```
+
+🧠 Look for:
+- POST request to `/login`
+- Username and password inside the payload
+
+🧠 Tip: Right-click → Follow → HTTP Stream to see the full request.
+
+---
+
+### 🛡️ **Result Summary Table**
+
+| Protocol | Encryption | Are credentials visible? | Evidence |
+|----------|------------|---------------------------|----------|
+| FTP      | ❌ No      | ✅ Yes                    | Screenshot: `USER` & `PASS` packet |
+| TELNET   | ❌ No      | ✅ Yes                    | Screenshot: visible keystrokes |
+| SSH      | ✅ Yes     | ❌ No                     | Screenshot: encrypted payload |
+| HTTP     | ❌ No (if no HTTPS) | ✅ Yes        | Screenshot: POST with creds |
+
 
 ## 5. Problems Encountered
 - **Rate Limiting / Account Lockouts:** Some services limit failed attempts.
